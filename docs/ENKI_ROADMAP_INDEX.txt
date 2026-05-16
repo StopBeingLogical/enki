@@ -1,0 +1,268 @@
+================================================================================
+ENKI ROADMAP — FROM v1.0 TO v2.0
+================================================================================
+
+Date: April 14, 2026
+Status: v1.0 Complete & Deployed, v2.0 Designed & Ready for Implementation
+
+================================================================================
+WHAT IS THIS?
+================================================================================
+
+You've completed ENKI v1.0 (a working model evaluation suite).
+
+This directory contains the DESIGN & ROADMAP for v2.0 (scaffolding + resilience).
+
+v2.0 isn't built yet — it's fully architected and ready to implement.
+
+================================================================================
+WHY v2.0?
+================================================================================
+
+v1.0 Findings (Red-Team Critique):
+
+  PROBLEM 1: Metrics are gameable
+    → Solution: Add semantic evaluator (LLM-as-judge)
+
+  PROBLEM 2: One JSON error crashes entire pipeline
+    → Solution: Implement JSON auto-repair, decouple stages
+
+  PROBLEM 3: Hardcoded timeouts fail on consumer hardware
+    → Solution: Configurable timeouts + token limits
+
+  PROBLEM 4: Models marked "unsuitable" when they just need scaffolding
+    → Solution: Multi-tiered retry (zero-shot → few-shot → CoT)
+
+================================================================================
+v2.0 DESIGN DOCUMENTS (Read in Order)
+================================================================================
+
+1. ENKI_V2_SUMMARY.md                  ← START HERE (5 min read)
+   Executive overview: what's new, why it matters, big picture
+
+2. ENKI_V2_ARCHITECTURE.md             ← Then read this (25 min read)
+   Technical design: vulnerabilities, requirements, solutions
+
+3. ENKI_V2_IMPLEMENTATION_ROADMAP.md   ← Then this (20 min read)
+   Stage-by-stage build plan: what code to write, in what order
+
+================================================================================
+THE FOUR MAJOR IMPROVEMENTS
+================================================================================
+
+IMPROVEMENT 1: Semantic Evaluation
+  Problem:  Count tasks (gameable)
+  Solution: LLM-as-a-judge grades semantic quality (1-5)
+  Impact:   Catches useless micro-tasks; Router trusts quality
+
+IMPROVEMENT 2: Decoupled Pipeline
+  Problem:  JSON formatting error → crash → lose Stage 3 data
+  Solution: Auto-repair JSON; continue pipeline even if formatting is bad
+  Impact:   Models aren't discarded for minor issues
+
+IMPROVEMENT 3: Resilient Infrastructure
+  Problem:  Hardcoded 5-min timeout fails on slow hardware
+  Solution: Configurable timeout, explicit token limits, temp tuning
+  Impact:   Fair comparison across hardware; infrastructure ≠ capability
+
+IMPROVEMENT 4: Scaffolding Discovery (Crown Jewel)
+  Problem:  Model fails zero-shot → marked unsuitable forever
+  Solution: Auto-retry with few-shot examples, CoT, explicit schema
+  Impact:   Discover what each model needs; Router prepends context
+
+================================================================================
+WHO DOES WHAT?
+================================================================================
+
+v1.0: Complete and Deployed
+  ✅ Enki baseline working
+  ✅ 13 files delivered
+  ✅ Production-ready
+  ✅ Ready to use immediately
+
+v2.0: Designed, Ready to Build
+  📐 Architecture: Complete
+  📐 Roadmap: Complete
+  📐 Code: Not yet written (but design specifies exactly what to build)
+  ⏳ Implementation: 22-32 hours (can be parallelized)
+
+================================================================================
+NEXT STEPS FOR v2.0 IMPLEMENTATION
+================================================================================
+
+STEP 1: Read the design (1 hour)
+  → ENKI_V2_SUMMARY.md (5 min)
+  → ENKI_V2_ARCHITECTURE.md (25 min)
+  → ENKI_V2_IMPLEMENTATION_ROADMAP.md (20 min)
+
+STEP 2: Assess effort & resources (30 min)
+  → Phase 1: Utilities (4-6 hrs, can parallelize)
+  → Phase 2: Core pipeline (8-10 hrs, sequential)
+  → Phase 3: Analysis updates (4-6 hrs, sequential)
+  → Phase 4: Testing (4-6 hrs, can parallelize)
+  → Phase 5: Deployment (2-4 hrs, manual)
+
+STEP 3: Decide: Claude Code or Manual Implementation
+  → Option A: Use Claude Code (recommended for speed)
+  → Option B: Manual implementation (recommended for learning)
+  → Hybrid: Mix of both
+
+STEP 4: Execute Phase 1 (Utilities)
+  → json_repair.py
+  → failure_detection.py
+  → scaffolding.py
+
+STEP 5: Execute Phase 2-5 (Pipeline, Analysis, Testing, Deployment)
+
+================================================================================
+KEY DESIGN DECISIONS (Built Into v2.0)
+================================================================================
+
+DECISION 1: v2.0 is 100% backward compatible with v1.0
+  Implementation: All v2.0 features are optional (flags/params)
+  v1.0 users can upgrade with zero config changes
+
+DECISION 2: Evaluator model is optional
+  Implementation: --evaluator-model (default: None)
+  If not provided: use v1.0 composite algorithm
+
+DECISION 3: Scaffolding is automatic, not manual
+  Implementation: If level 0 fails, try level 1; if 1 fails, try 2
+  Result: Models are auto-profiled; Router gets exact requirements
+
+DECISION 4: Semantic score floors granularity score
+  Implementation: Composite = (gran*0.3) + (sem*0.4) + (self*0.3)
+  Result: Can't game metrics with useless micro-tasks
+
+================================================================================
+SUCCESS CRITERIA FOR v2.0
+================================================================================
+
+Methodological:
+  ✓ Semantic evaluator prevents metric gamification
+  ✓ Evaluator prevents weak models from scoring higher than capable ones
+  ✓ Evaluator judgments are sensible and explainable
+
+Pipeline Resilience:
+  ✓ JSON formatting errors don't crash pipeline
+  ✓ Stage 3 runs even if Stage 2 formatting is imperfect
+  ✓ Context window exhaustion is detected separately from capability failure
+  ✓ Timeouts are configurable without false negatives
+
+Scaffolding Discovery:
+  ✓ Models retry with Level 1 (few-shot) if zero-shot fails
+  ✓ Models retry with Level 2 (CoT) if Level 1 fails
+  ✓ Registry shows scaffolding level needed (0, 1, or 2)
+  ✓ Router can prepend context based on level
+
+Backward Compatibility:
+  ✓ v1.0 users can upgrade with zero config
+  ✓ Running with --max-scaffolding-level 0 = v1.0 behavior
+  ✓ Running without --evaluator-model = v1.0 scoring
+
+================================================================================
+TIMELINE
+================================================================================
+
+Week 1: Build Phase 1 (utilities)
+  → json_repair.py
+  → failure_detection.py
+  → scaffolding.py
+  Time: 4-6 hours
+
+Week 1-2: Build Phase 2 (core pipeline)
+  → Refactor enki_stage2_decompose.py (add scaffolding retries)
+  → Refactor enki_stage3_selfassess.py (add timeout tuning)
+  → Create enki_stage2b_semantic_evaluator.py
+  Time: 8-10 hours
+
+Week 2: Build Phase 3 (analysis updates)
+  → Refactor enki_stage4_analyze.py (semantic scoring, registry)
+  Time: 4-6 hours
+
+Week 2-3: Phase 4 (testing + validation)
+  → Unit tests for each utility
+  → Integration tests for pipeline
+  → Backward compatibility tests
+  Time: 4-6 hours
+
+Week 3: Phase 5 (deployment)
+  → Documentation updates
+  → Rollout plan execution
+  → Validate v2.0 in production
+  Time: 2-4 hours
+
+Total: 22-32 hours over 3 weeks
+
+================================================================================
+WHERE ARE THE FILES?
+================================================================================
+
+v1.0 Deliverables: /mnt/user-data/outputs/
+  ├── 00_START_HERE.txt
+  ├── ENKI_GUIDE.md
+  ├── ENKI_QUICK_REFERENCE.md
+  ├── ENKI_MANIFEST.md
+  ├── ENKI_NAMING_*.md
+  ├── enki_stage*.py (3 scripts)
+  └── project_skeleton_stock_trading.json
+
+v2.0 Design Documents: /mnt/user-data/outputs/
+  ├── ENKI_V2_SUMMARY.md                  ← START HERE
+  ├── ENKI_V2_ARCHITECTURE.md
+  └── ENKI_V2_IMPLEMENTATION_ROADMAP.md
+
+This File:
+  └── ENKI_ROADMAP_INDEX.txt              ← YOU ARE HERE
+
+================================================================================
+QUICK REFERENCE
+================================================================================
+
+v1.0 Status:
+  Status: ✅ Complete, deployed, production-ready
+  Files: 13 total (~271 KB)
+  Scripts: 3 fully implemented
+  Documentation: 9 files
+  Ready to use: Yes, immediately
+
+v2.0 Status:
+  Status: 📐 Architecture complete, ready to implement
+  Files: Design docs + refactoring specs (code not yet written)
+  Scripts: 7 files to create/modify
+  Documentation: Design complete, roadmap complete
+  Ready to build: Yes, immediately (fully architected)
+
+================================================================================
+THE BIG PICTURE
+================================================================================
+
+v1.0 was the baseline. It works. Ship it.
+
+v2.0 is the resilience pass. It makes v1.0 better by:
+  - Measuring quality accurately (not just structure)
+  - Being resilient to formatting/infrastructure issues
+  - Discovering what scaffolding each model needs
+  - Providing Router with actionable guidance
+
+v2.0 will make Concierge's Router MUCH better at model selection.
+
+================================================================================
+START HERE
+================================================================================
+
+To proceed with v2.0:
+
+1. Read ENKI_V2_SUMMARY.md (5 minutes)
+2. Read ENKI_V2_ARCHITECTURE.md (25 minutes)
+3. Read ENKI_V2_IMPLEMENTATION_ROADMAP.md (20 minutes)
+4. Decide: Claude Code or manual implementation
+5. Execute Phase 1 (utilities)
+
+All the information you need is in the three documents above.
+
+Questions? Re-read ENKI_V2_ARCHITECTURE.md — it's comprehensive.
+
+================================================================================
+April 14, 2026 — Enki v1.0 Complete, v2.0 Designed
+================================================================================

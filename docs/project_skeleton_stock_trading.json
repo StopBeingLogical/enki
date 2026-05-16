@@ -1,0 +1,183 @@
+{
+  "title": "Stock Trading Simulator",
+  "description": "A web-based stock market trading simulator with minimal capital ($1 starting) for learning day trading strategies.",
+  "user_intent": "Build a web app for simulating stock market day trading with absolutely minimal initial investment; $1 starting capital and see where it goes.",
+  "architecture": {
+    "overview": "Three-tier architecture: React frontend, Python FastAPI backend, PostgreSQL database",
+    "layers": [
+      {
+        "name": "Frontend",
+        "tech": "React + TypeScript",
+        "responsibility": "User interface for viewing portfolio, executing trades, viewing charts"
+      },
+      {
+        "name": "Backend API",
+        "tech": "Python FastAPI",
+        "responsibility": "REST API for authentication, portfolio operations, market data queries"
+      },
+      {
+        "name": "Infrastructure",
+        "tech": "PostgreSQL, Redis (caching), IEX Cloud API",
+        "responsibility": "Data persistence and real-time market data"
+      }
+    ]
+  },
+  "modules": [
+    "market_data_fetcher",
+    "portfolio_engine",
+    "trading_engine",
+    "backtest_runner",
+    "user_auth",
+    "web_ui",
+    "notifications"
+  ],
+  "module_details": {
+    "market_data_fetcher": {
+      "description": "Fetches and caches real-time stock prices from external API",
+      "responsibilities": [
+        "Query stock prices from IEX Cloud",
+        "Cache prices in Redis with TTL",
+        "Handle API rate limits and failures",
+        "Validate price data"
+      ]
+    },
+    "portfolio_engine": {
+      "description": "Manages user portfolio state: holdings, cash, profit/loss, position sizing",
+      "responsibilities": [
+        "Track user holdings (quantity, avg cost basis)",
+        "Calculate portfolio value, P&L, asset allocation",
+        "Enforce minimum account size and position limits",
+        "Generate trade confirmations"
+      ]
+    },
+    "trading_engine": {
+      "description": "Executes trades and manages order state",
+      "responsibilities": [
+        "Accept buy/sell orders from frontend",
+        "Validate orders (sufficient funds, valid symbols, trading hours)",
+        "Execute orders against current market prices",
+        "Record order history and settlements"
+      ]
+    },
+    "backtest_runner": {
+      "description": "Simulates trading strategies against historical price data",
+      "responsibilities": [
+        "Load historical OHLC data",
+        "Replay trades against historical prices",
+        "Generate backtest performance reports",
+        "Calculate Sharpe ratio, max drawdown, win rate"
+      ]
+    },
+    "user_auth": {
+      "description": "User signup, login, session management",
+      "responsibilities": [
+        "Register new users",
+        "Authenticate with JWT tokens",
+        "Manage user profiles and settings",
+        "Password reset flow"
+      ]
+    },
+    "web_ui": {
+      "description": "React-based user interface",
+      "responsibilities": [
+        "Dashboard showing portfolio and P&L",
+        "Trade entry form",
+        "Price charts and market overview",
+        "Trade history table",
+        "Settings and profile management"
+      ]
+    },
+    "notifications": {
+      "description": "In-app and email notifications",
+      "responsibilities": [
+        "Trade execution notifications",
+        "Daily summary emails",
+        "Alerts for price targets or drawdown limits",
+        "System status notifications"
+      ]
+    }
+  },
+  "tech_stack": {
+    "backend": {
+      "language": "Python 3.11",
+      "framework": "FastAPI",
+      "orm": "SQLAlchemy",
+      "validation": "Pydantic"
+    },
+    "database": {
+      "primary": "PostgreSQL 15",
+      "cache": "Redis (in-memory)"
+    },
+    "frontend": {
+      "framework": "React 18",
+      "language": "TypeScript",
+      "state_management": "Redux Toolkit",
+      "charts": "Recharts",
+      "styling": "Tailwind CSS"
+    },
+    "infrastructure": {
+      "web_server": "Gunicorn",
+      "containerization": "Docker",
+      "deployment": "Docker Compose (dev), AWS ECS (production)"
+    },
+    "external_services": {
+      "market_data": "IEX Cloud API",
+      "authentication": "JWT (built-in)",
+      "email": "SendGrid"
+    },
+    "testing": {
+      "backend": "pytest",
+      "frontend": "Jest + React Testing Library",
+      "api": "Postman/Newman"
+    }
+  },
+  "assumptions": [
+    "Real-time market data via IEX Cloud API (free tier sufficient for learning)",
+    "Trading hours: 9:30 AM — 4:00 PM Eastern Time (US market hours only)",
+    "No shorting, margin, or leverage allowed",
+    "30-day backtest horizon (no multi-year historical backtests)",
+    "Single user system initially (no multi-tenant complexity)",
+    "Portfolio starting value: $1.00",
+    "No transaction fees or slippage modeling",
+    "Synchronous order execution (no queue/matching engine)",
+    "Trades execute at current market price (last trade price from API)"
+  ],
+  "critical_decisions": [
+    {
+      "decision": "Use real-time API data instead of historical simulation",
+      "rationale": "More engaging for learners; real-time feedback on decisions",
+      "tradeoff": "Requires external API; introduces rate-limiting and cost considerations"
+    },
+    {
+      "decision": "No shorting or margin",
+      "rationale": "Simpler for beginners; reduces model complexity",
+      "tradeoff": "Less realistic for advanced traders"
+    },
+    {
+      "decision": "Synchronous order execution",
+      "rationale": "Simpler implementation; sufficient for MVP",
+      "tradeoff": "Not realistic for high-frequency strategies or market impact"
+    },
+    {
+      "decision": "Single-user system (no multi-tenancy)",
+      "rationale": "Faster MVP; adequate for personal learning tool",
+      "tradeoff": "Would need rearchitecture for production SaaS"
+    }
+  ],
+  "constraints": [
+    "Budget: Free or $10/month (no expensive cloud services)",
+    "Hosting: Self-hosted Docker on $5/month VPS or free tier cloud",
+    "API costs: IEX Cloud free tier (100 requests/month or ~$10 paid)",
+    "Development time: Target 40-60 hours for MVP",
+    "Data retention: 90 days of trade history minimum"
+  ],
+  "success_criteria": [
+    "User can create account and log in",
+    "User can view current portfolio with starting $1 capital",
+    "User can execute buy/sell orders at current market prices",
+    "User can see trade history with P&L for each trade",
+    "User can run a 30-day backtest on a simple strategy",
+    "System handles 500+ concurrent users without significant latency",
+    "P&L and portfolio calculations are accurate within 0.01%"
+  ]
+}

@@ -1,0 +1,275 @@
+================================================================================
+ENKI — MODEL EVALUATION SUITE — EXPORT MANIFEST
+================================================================================
+Date: April 14, 2026
+Framework: Enki (Sumerian: god of wisdom and knowledge)
+Domain: Software (per identity-naming-v1.0)
+Version: 1.0-enki
+
+================================================================================
+DELIVERABLES
+================================================================================
+
+DOCUMENTATION (5 files)
+─────────────────────────────────────────────────────────────────────────────
+
+1. ENKI_GUIDE.md
+   Status: ✅ Complete
+   Size: ~21 KB
+   Purpose: Comprehensive guide covering all aspects of Enki
+   Contents:
+     - Overview and quick start
+     - Detailed explanation of each stage
+     - Understanding results and metric interpretation
+     - Workflow and roadmap (Phase 1-4)
+     - Integration with Concierge
+     - Troubleshooting guide
+     - Creating custom skeletons
+   Original: CODING_DECOMPOSITION_SUITE_README.md
+
+2. ENKI_QUICK_REFERENCE.md
+   Status: ✅ Complete
+   Size: ~13 KB
+   Purpose: Fast reference card for common tasks
+   Contents:
+     - One-liner commands
+     - Key metrics table
+     - 30-second interpretation guide
+     - Testing checklist (pre-flight, validation, full audit)
+     - Troubleshooting checklist
+     - Performance benchmarks
+     - Common questions
+     - Deployment checklist
+   Original: QUICK_REFERENCE.md
+
+3. ENKI_NAMING_ANALYSIS.md
+   Status: ✅ Complete
+   Size: ~7.4 KB
+   Purpose: Explanation of naming per identity-naming-v1.0
+   Contents:
+     - Domain classification (Software/Sumerian)
+     - What gets named vs. what doesn't
+     - Naming options (single vs. modular)
+     - Primary recommendation (Enki)
+     - Compliance with identity-naming-v1.0
+     - Implementation guide
+   Original: NAMING_ANALYSIS.md
+
+4. ENKI_NAMING_SUMMARY.md
+   Status: ✅ Complete
+   Size: ~7.5 KB
+   Purpose: Summary of Enki naming implementation
+   Contents:
+     - What changed (branding, filenames)
+     - Framework identity
+     - File updates
+     - Usage examples
+     - Architecture overview
+     - Identity compliance
+     - Migration checklist
+   Original: ENKI_NAMING_SUMMARY.md
+
+5. ENKI_MANIFEST.md
+   Status: ✅ Complete
+   Size: ~16 KB
+   Purpose: Complete inventory and deployment guide
+   Contents:
+     - Executive summary
+     - File inventory
+     - Detailed script descriptions
+     - Data files
+     - How to deploy
+     - Success criteria
+     - Troubleshooting
+     - Version information
+   Original: MANIFEST.md
+
+PYTHON SCRIPTS (3 files)
+─────────────────────────────────────────────────────────────────────────────
+
+1. enki_stage2_decompose.py
+   Status: ✅ Complete
+   Size: ~14 KB
+   Purpose: Enki Stage 2 — Project decomposition evaluation
+   Key Function:
+     - Takes project skeleton
+     - Decomposes into atomic tasks (1-4 hour chunks)
+     - Measures task granularity, assumptions, dependencies
+   Input: project_skeleton_stock_trading.json
+   Output: enki_decomposition_[model].json
+   Original: eval_coding_decompose.py
+
+2. enki_stage3_selfassess.py
+   Status: ✅ Complete
+   Size: ~16 KB
+   Purpose: Enki Stage 3 — Model self-assessment evaluation
+   Key Function:
+     - Evaluates model's self-awareness
+     - Per-category confidence (API, DB, UI, tests, DevOps)
+     - Identifies capability boundaries and risk areas
+   Input: enki_decomposition_[model].json
+   Output: enki_selfassess_[model].json
+   Original: eval_coding_selfassess.py
+
+3. enki_stage4_analyze.py
+   Status: ✅ Complete
+   Size: ~23 KB
+   Purpose: Enki Stage 4 — Analysis and registry integration
+   Key Function:
+     - Aggregates decomposition and self-assessment results
+     - Produces comprehensive audit report
+     - Generates Concierge model registry entries
+     - Supports side-by-side model comparison
+   Input: enki_decomposition_[model].json + enki_selfassess_[model].json
+   Output: enki_audit_report_[model].json + enki_registry_[model].json
+   Original: analyze_coding_audit.py
+
+DATA FILES (1 file)
+─────────────────────────────────────────────────────────────────────────────
+
+1. project_skeleton_stock_trading.json
+   Status: ✅ Complete
+   Size: ~6.5 KB
+   Purpose: Reference project skeleton for testing Enki
+   Contents:
+     - Stock trading simulator project definition
+     - 7 modules with responsibilities
+     - Tech stack (Python/FastAPI, React, PostgreSQL)
+     - Assumptions and constraints
+     - Critical decisions and trade-offs
+     - Success criteria
+   Use: As-is for baseline testing, or as template for custom skeletons
+
+================================================================================
+RECOMMENDED FILE STRUCTURE
+================================================================================
+
+concierge/eval/
+├── README.md                                    (Symlink to ENKI_GUIDE.md)
+│
+├── documentation/
+│   ├── ENKI_GUIDE.md                           (Full comprehensive guide)
+│   ├── ENKI_QUICK_REFERENCE.md                 (Quick card)
+│   ├── ENKI_NAMING_ANALYSIS.md                 (Naming rationale)
+│   ├── ENKI_NAMING_SUMMARY.md                  (Implementation summary)
+│   └── ENKI_MANIFEST.md                        (Inventory)
+│
+├── scripts/
+│   ├── enki_stage2_decompose.py                (Decomposition)
+│   ├── enki_stage3_selfassess.py               (Self-assessment)
+│   └── enki_stage4_analyze.py                  (Analysis)
+│
+├── data/
+│   └── project_skeleton_stock_trading.json     (Reference skeleton)
+│
+├── results/                                     (Output directory)
+│   ├── enki_decomposition_gemma4.json
+│   ├── enki_selfassess_gemma4.json
+│   ├── enki_audit_report_gemma4.json
+│   ├── enki_registry_gemma4.json
+│   └── ...
+│
+└── registry/
+    └── model_registry.yaml                     (Concierge integration)
+
+================================================================================
+QUICK START
+================================================================================
+
+1. Copy files to ~/concierge/eval/ (follow structure above)
+
+2. Run first Enki audit:
+   python scripts/enki_stage2_decompose.py \
+     --model gemma4:26b \
+     --skeleton data/project_skeleton_stock_trading.json \
+     --output results/enki_decomposition_gemma4.json
+   
+   python scripts/enki_stage3_selfassess.py \
+     --model gemma4:26b \
+     --decomposition results/enki_decomposition_gemma4.json \
+     --output results/enki_selfassess_gemma4.json
+   
+   python scripts/enki_stage4_analyze.py \
+     --decomposition results/enki_decomposition_gemma4.json \
+     --selfassess results/enki_selfassess_gemma4.json \
+     --output results/enki_audit_report_gemma4.json \
+     --registry-entry results/enki_registry_gemma4.json
+
+3. Review results in results/enki_audit_report_gemma4.json
+
+4. Add results to Concierge model registry
+
+================================================================================
+FILE MAPPING
+================================================================================
+
+Original Name                          →  New Export Name
+─────────────────────────────────────────────────────────────────────────────
+CODING_DECOMPOSITION_SUITE_README.md   →  ENKI_GUIDE.md
+QUICK_REFERENCE.md                     →  ENKI_QUICK_REFERENCE.md
+NAMING_ANALYSIS.md                     →  ENKI_NAMING_ANALYSIS.md
+ENKI_NAMING_SUMMARY.md                 →  ENKI_NAMING_SUMMARY.md
+MANIFEST.md                            →  ENKI_MANIFEST.md
+
+eval_coding_decompose.py               →  enki_stage2_decompose.py
+eval_coding_selfassess.py              →  enki_stage3_selfassess.py
+analyze_coding_audit.py                →  enki_stage4_analyze.py
+
+project_skeleton_stock_trading.json    →  project_skeleton_stock_trading.json
+                                           (unchanged)
+
+================================================================================
+SIZING SUMMARY
+================================================================================
+
+Documentation:   ~65 KB (5 files)
+Scripts:         ~53 KB (3 files)
+Data:            ~6.5 KB (1 file)
+─────────────────────────────────────
+Total:           ~124.5 KB (9 files)
+
+All files are self-contained. Only external dependency: requests (Python library)
+
+================================================================================
+VERSION & COMPLIANCE
+================================================================================
+
+Version: 1.0-enki (released April 14, 2026)
+Domain: Software (per identity-naming-v1.0)
+Status: Production-ready, no further development required
+
+✅ All scripts implemented and tested
+✅ Complete documentation
+✅ Ready to deploy immediately
+✅ Compliant with identity-naming-v1.0
+✅ Compatible with Concierge architecture
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. EXTRACT: Copy all files from this export package to your project directory
+2. ORGANIZE: Follow the recommended file structure above
+3. DEPLOY: Copy scripts/ and data/ to your Concierge eval environment
+4. TEST: Run first Enki audit on baseline model (Gemma 4 26B)
+5. INTEGRATE: Add results to Concierge model registry
+6. ITERATE: Test additional models and expand to more project skeletons
+
+For detailed instructions, see ENKI_GUIDE.md
+
+================================================================================
+SUPPORT RESOURCES
+================================================================================
+
+Full Guide:           ENKI_GUIDE.md (comprehensive, ~21 KB)
+Quick Reference:      ENKI_QUICK_REFERENCE.md (scannable, ~13 KB)
+Naming Explanation:   ENKI_NAMING_ANALYSIS.md (~7.4 KB)
+Implementation:       ENKI_NAMING_SUMMARY.md (~7.5 KB)
+Manifest:            ENKI_MANIFEST.md (~16 KB)
+
+All files are in this export package.
+
+================================================================================
+CREATED: April 14, 2026
+READY TO DEPLOY
+================================================================================
