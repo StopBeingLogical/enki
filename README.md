@@ -1,3 +1,5 @@
+> **Consolidated 2026-09 into mushdamma (http://192.168.3.174:3000/bobby/mushdamma) at `archive/enki/` under DEC-0028.** This repository is frozen; do not develop here.
+
 # Enki — Model Evaluation Framework
 
 **Version:** v1.0 (Production) + v2.0 (Architected) | **Last Updated:** April 2026
